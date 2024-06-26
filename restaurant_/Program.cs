@@ -240,9 +240,8 @@ namespace restaurant_
             Console.WriteLine();
             Console.WriteLine("Терминал для заказа");
             Console.WriteLine("Введите продукт");
-            //choice = Console.ReadKey().KeyChar;
             int idCategory = Convert.ToInt32(choiceCategory);
-            switch (choice)
+            switch (choiceCategory)
             {
                 case '1':
                     idCategory = 1;
@@ -277,7 +276,6 @@ namespace restaurant_
                 bottomMenu();
                 quantityOrderItem += 1;
                 newOrderItem = new orderItem(quantityOrderItem);
-                //Console.WriteLine(choice);
                 if (choice != 'b')
                 {
                     int choiceNumber = (int)Char.GetNumericValue(choice);
@@ -302,21 +300,23 @@ namespace restaurant_
 
             if (choice != 'b')
             {
-                newOrderItem.quantity = Convert.ToInt32(choice.ToString());
-                newOrderItem.productPrice = newOrderItem.product.Price * newOrderItem.quantity; // расчёт общей стоимости
-                var alreadyThereIs = newOrder.orderItems.Where(x => x.product.Id == newOrderItem.product.Id).ToList();
-                newOrder.orderItems.Add(newOrderItem); // добавление блюда в заказ
-                                                       //var existingItem = newOrder.orderItems.FirstOrDefault(x => x.product.Id == newOrderItem.product.Id);
-                                                       //if (existingItem != null)
-                                                       //{
-                                                       //    existingItem.quantity += newOrderItem.quantity;
-                                                       //    existingItem.productPrice = existingItem.product.Price * existingItem.quantity; // пересчитываем стоимость
-                                                       //}
-                                                       //else
-                                                       //{
-                                                       //    newOrderItem.productPrice = newOrderItem.product.Price * newOrderItem.quantity; // расчёт общей стоимости
-                                                       //    newOrder.orderItems.Add(newOrderItem);
-                                                       //}
+                //newOrderItem.quantity = Convert.ToInt32(choice.ToString());
+                //newOrderItem.productPrice = newOrderItem.product.Price * newOrderItem.quantity; // расчёт общей стоимости
+                //var alreadyThereIs = newOrder.orderItems.Where(x => x.product.Id == newOrderItem.product.Id).ToList();
+                //newOrder.orderItems.Add(newOrderItem); // добавление блюда в заказ
+                int quantity = Convert.ToInt32(choice.ToString());
+                var existingItem = newOrder.orderItems.FirstOrDefault(x => x.product.Id == newOrderItem.product.Id);
+                if (existingItem != null)
+                {
+                    existingItem.quantity += quantity;
+                    existingItem.productPrice = existingItem.product.Price * existingItem.quantity; // пересчёт стоимости
+                }
+                else
+                {
+                    newOrderItem.quantity = quantity; 
+                    newOrderItem.productPrice = newOrderItem.product.Price * newOrderItem.quantity; // расчёт общей стоимости
+                    newOrder.orderItems.Add(newOrderItem);
+                }
                 choosingPath();
             }
             else
@@ -390,9 +390,7 @@ namespace restaurant_
         static void Main(string[] args)
         {
             applicationContext.Categories = newCategory();
-            //Console.WriteLine(applicationContext.Categories[0].Name);
             applicationContext.Products = newProduct();
-            //Console.WriteLine(applicationContext.Products[0].Name);
             applicationContext.Order = new List<order>();
             do
             {
